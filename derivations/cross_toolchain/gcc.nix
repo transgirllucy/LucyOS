@@ -12,6 +12,7 @@ let
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
   gccPkg = stdenv.mkDerivation {
+    hardeningDisable = ["all"];
     name = "gcc-LucyOS";
 
     src = pkgs.fetchurl {
