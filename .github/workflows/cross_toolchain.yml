@@ -42,7 +42,7 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.bintuils
+    - run: nix build .#crossToolchain.binutils
   glibc32:
     runs-on: ubuntu-latest
     steps:
