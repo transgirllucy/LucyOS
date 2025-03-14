@@ -3,52 +3,36 @@ on:
   pull_request:
   push:
 jobs:
-  libstdcpp:
+  m4:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.libstdcpp 
-  linuxHeaders:
+    - run: nix build .#crossTempTools.m4 
+  ncurses32:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.linuxHeaders
-  gcc:
+    - run: nix build .#crossTempTools.ncurses32
+  ncurses64:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.gcc
-  glibc64:
+    - run: nix build .#crossTempTools.ncurses64
+  bash:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.glibc64
-  binutils:
-    uns-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.bintuils
-  glibc32:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#crossToolchain.glibc32
+    - run: nix build .#crossTempTools.bash
     
