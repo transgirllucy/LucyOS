@@ -22,17 +22,19 @@
         pkgs = pkgs;
         customBinutils = binuntilsStage;
       };
-      glibc64cStage = import ./derivations/cross_toolchain/glibc64.nix { pkgs = pkgs; cc1 = linuxHeadersStage; };
+      glibc64Stage = import ./derivations/cross_toolchain/glibc64.nix { pkgs = pkgs; cc1 = linuxHeadersStage; };
       glibc32Stage = import ./derivations/cross_toolchain/glibc32.nix { pkgs = pkgs; cc1 = linuxHeadersStage; };
-
-    in
+          libstdcppStage = import ./derivations/cross_toolchain/libstdcpp.nix { pkgs = pkgs; cc1 = glibc64Stage; };
+    
+in
     {
       packages.x86_64-linux = {
         crossToolchain = {
+          libstdcpp = libstdcppStage;
 	  linuxHeaders = linuxHeadersStage;
           gcc = gccStage1;
           binutils = binuntilsStage;
-	  glibc64 = glibc64cStage;
+	  glibc64 = glibc64Stage;
 	  glibc32 = glibc32Stage;
         };
       };

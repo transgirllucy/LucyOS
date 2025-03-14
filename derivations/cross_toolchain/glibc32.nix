@@ -41,7 +41,6 @@ let
       export PATH=$LFS/usr/bin:$PATH
       export CC1=${cc1}
       export CONFIG_SITE=$LFS/usr/share/config.site
-      export MAKEOPTS=-j12
 
       cp -r $CC1/* $LFS/
       chmod -R u+w $LFS
