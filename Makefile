@@ -1,4 +1,6 @@
+OPTIONS=--builders 'ssh://lucy@nix2twink.gay x86_64-linux'
+
 binutils:
-	nix build .#crossToolchain.binutils -v
+	nix build --impure .#crossToolchain.binutils -v ${OPTIONS}
 gcc:
-	nix build .#crossToolchain.gcc -v
+	nix build .#crossToolchain.gcc -v ${OPTIONS}

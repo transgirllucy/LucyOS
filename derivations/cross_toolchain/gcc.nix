@@ -12,7 +12,7 @@ let
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
   gccPkg = stdenv.mkDerivation {
-    hardeningDisable = ["all"];
+    hardeningDisable = [ "all" ];
     name = "gcc-LucyOS";
 
     src = pkgs.fetchurl {
@@ -98,7 +98,7 @@ let
 
         ../configure                  \
       --target=$LFS_TGT                              \
-      --prefix=$LFStools                            \
+      --prefix=$LFSTOOLS                            \
       --with-glibc-version=2.41                      \
       --with-sysroot=$LFS                            \
       --with-newlib                                  \
