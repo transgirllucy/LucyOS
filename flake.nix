@@ -51,6 +51,11 @@
 	pkgs = pkgs;
         cc1 = ncurses64Stage;
       };
+     coreutilsStage = import ./derivations/temp_tools/coreutils.nix { pkgs = pkgs; cc1 = bashStage; };
+
+      diffutilsStage = import ./derivations/temp_tools/diffutils.nix { pkgs = pkgs; cc1 = coreutilsStage; };
+      fileStage = import ./derivations/temp_tools/file.nix { pkgs = pkgs; cc1 = diffutilsStage; };
+
 
     in
     {
@@ -68,6 +73,9 @@
           ncurses64 = ncurses64Stage;
           ncurses32 = ncurses32Stage;
           bash = bashStage;
+	  coreutils = coreutilsStage;
+          diffutils = diffutilsStage;
+          file = fileStage;
         };
       };
       hydraJobs = {
