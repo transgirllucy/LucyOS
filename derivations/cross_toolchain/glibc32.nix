@@ -16,6 +16,8 @@ let
   glibcPkg = stdenvNoCC.mkDerivation {
     name = "glibc32-LucyOS";
 
+    dontFixup = true;
+
     src = pkgs.fetchurl {
       url = "https://ftp.gnu.org/gnu/glibc/glibc-2.41.tar.xz";
       hash = "sha256-paJrIvVF1rfXs92CjhHkKPJPT6xDyTT7BxtqfQgo6QE=";
@@ -39,10 +41,10 @@ let
       export PATH=$LFS/usr/bin:$PATH
       export CC1=${cc1}
       export CONFIG_SITE=$LFS/usr/share/config.site
+      export MAKEOPTS=-j12
 
       cp -r $CC1/* $LFS/
       chmod -R u+w $LFS
-
     '';
 
     configurePhase = ''
