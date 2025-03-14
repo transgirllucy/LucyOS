@@ -36,5 +36,9 @@
 	  glibc32 = glibc32Stage;
         };
       };
+      hydraJobs = {
+	inherit (self)
+ 	packages.x86_64-linux.crossToolchain.binutils
+      };
     };
 }
