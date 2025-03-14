@@ -37,7 +37,8 @@
         };
       };
       hydraJobs = {
- 	self.packages.x86_64-linux.crossToolchain.binutilis;
+ 	inherit (self)
+		packages;
       };
     };
 }
