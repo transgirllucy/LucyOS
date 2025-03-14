@@ -12,16 +12,16 @@ let
 
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
-  bashPkg = stdenvNoCC.mkDerivation {
-    name = "bash-LucyOS";
+  diffutilsPkg = stdenvNoCC.mkDerivation {
+    name = "diffutils-LucyOS";
 
     src = pkgs.fetchurl {
-      url = "https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz";
-      hash = "sha256-lZmyLs0dV4etfTt78MWfMSszltHigRdd0fikAU2mIf8=";
+      url = "https://ftp.gnu.org/gnu/diffutils/diffutils-3.11.tar.xz";
+      hash = "sha256-pz7wX+N91YX32HBo5KBjl2BBn4EBOL11xh3aofniEx4=";
     };
 
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [ cc1 pkgs.gcc ];
+    buildInputs = [ cc1 ];
     dontFixup = true;
 
     prePhases = "prepEnvironmentPhase";
@@ -29,8 +29,9 @@ let
       export LFS=$PWD
       export LFSTOOLS=$PWD/tools
       export LFS_TGT=$(uname -m)-lfs-linux-gnu
+      export PATH=$PATH:$LFS/usr/bin
+      export PATH=$PATH:$LFSTOOLS/bin
       export CONFIG_SITE=$LFS/usr/share/config.site
-      export PATH=$LFSTOOLS/bin:$PATH
       export CC1=${cc1}
 
       cp -r $CC1/* $LFS
@@ -41,19 +42,12 @@ let
     configurePhase = ''
       ./configure --prefix=/usr                   \
           --host=$LFS_TGT                         \
-          --build=$(sh ./support/config.guess)    \
-          --without-bash-malloc
+          --build=$(build-aux/config.guess)
     '';
 
     installFlags = [ "DESTDIR=$(LFS)" ];
 
     postInstall = ''
-      mkdir $LFS/bin
-
-      pushd $LFS/usr
-      ln -sv ./bin/bash ../bin/sh
-      popd
-
       rm -r $LFS/$sourceRoot
       cp -rvp $LFS/* $out/
     '';
@@ -72,4 +66,5 @@ let
     '';
   };
 in
-bashPkg
+diffutilsPkg
+

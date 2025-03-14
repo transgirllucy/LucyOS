@@ -10,7 +10,7 @@ let
   ];
 
   headersCCPkgs = stdenv.mkDerivation {
-    name = "linuxHeaders-LFS";
+    name = "linuxHeaders-LucyOS";
 
     src = pkgs.fetchurl {
       url = "https://git.kernel.org/torvalds/t/linux-6.14-rc6.tar.gz";

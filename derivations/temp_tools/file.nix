@@ -12,13 +12,13 @@ let
 
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
-  bashPkg = stdenvNoCC.mkDerivation {
-    name = "bash-LucyOS";
+  filePkg = stdenvNoCC.mkDerivation {
+    name = "file-LucyOS";
 
     src = pkgs.fetchurl {
-      url = "https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz";
-      hash = "sha256-lZmyLs0dV4etfTt78MWfMSszltHigRdd0fikAU2mIf8=";
-    };
+      url = "https://astron.com/pub/file/file-5.46.tar.gz";
+      hash = "";
+     };
 
     nativeBuildInputs = [ nativePackages ];
     buildInputs = [ cc1 pkgs.gcc ];
@@ -29,31 +29,45 @@ let
       export LFS=$PWD
       export LFSTOOLS=$PWD/tools
       export LFS_TGT=$(uname -m)-lfs-linux-gnu
+      export PATH=$PATH:$LFS/usr/bin
+      export PATH=$PATH:$LFSTOOLS/bin
       export CONFIG_SITE=$LFS/usr/share/config.site
-      export PATH=$LFSTOOLS/bin:$PATH
       export CC1=${cc1}
 
       cp -r $CC1/* $LFS
       chmod -R u+w $LFS
     '';
 
-
     configurePhase = ''
-      ./configure --prefix=/usr                   \
-          --host=$LFS_TGT                         \
-          --build=$(sh ./support/config.guess)    \
-          --without-bash-malloc
+      mkdir build
+      cd build
+          ../configure                \
+              --disable-bzlib         \
+              --disable-libseccomp    \
+              --disable-xzlib         \
+              --disable-zlib
+          make
+      cd ..
+
+      # export CC=$LFS_TGT-gcc
+      # export CXX=$LFS_TGT-g++
+
+      ./configure                     \
+          --prefix=/usr               \
+          --host=$LFS_TGT             \
+          --build=$(./config.guess)
+    '';
+
+    # buildFlags = [ "FILE_COMPILE=$LFS/$sourceRoot/build/src/file" ];
+
+    buildPhase = ''
+      make  FILE_COMPILE=$LFS/$sourceRoot/build/src/file
     '';
 
     installFlags = [ "DESTDIR=$(LFS)" ];
 
     postInstall = ''
-      mkdir $LFS/bin
-
-      pushd $LFS/usr
-      ln -sv ./bin/bash ../bin/sh
-      popd
-
+      rm -v $LFS/usr/lib/libmagic.la
       rm -r $LFS/$sourceRoot
       cp -rvp $LFS/* $out/
     '';
@@ -72,4 +86,5 @@ let
     '';
   };
 in
-bashPkg
+filePkg
+

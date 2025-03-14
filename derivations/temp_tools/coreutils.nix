@@ -7,21 +7,19 @@ let
     cmake
     zlib
     bison
-    binutils
   ];
 
-  # Attributes for stdenv.mkDerivation can be found at:
-  # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
-  bashPkg = stdenvNoCC.mkDerivation {
-    name = "bash-LucyOS";
+
+  coreutilsPkg = stdenvNoCC.mkDerivation {
+    name = "coreutils-LucyOS";
 
     src = pkgs.fetchurl {
-      url = "https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz";
-      hash = "sha256-lZmyLs0dV4etfTt78MWfMSszltHigRdd0fikAU2mIf8=";
+      url = "https://ftp.gnu.org/gnu/coreutils/coreutils-9.6.tar.xz";
+      hash = "sha256-egEkMns5j9nrGmq95YM4mCFCLHRP+hBzSyT1V2ENMoM=";
     };
 
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [ cc1 pkgs.gcc ];
+    buildInputs = [ cc1 ];
     dontFixup = true;
 
     prePhases = "prepEnvironmentPhase";
@@ -30,7 +28,8 @@ let
       export LFSTOOLS=$PWD/tools
       export LFS_TGT=$(uname -m)-lfs-linux-gnu
       export CONFIG_SITE=$LFS/usr/share/config.site
-      export PATH=$LFSTOOLS/bin:$PATH
+      export PATH=$PATH:$LFS/usr/bin
+      export PATH=$PATH:$LFSTOOLS/bin
       export CC1=${cc1}
 
       cp -r $CC1/* $LFS
@@ -41,19 +40,19 @@ let
     configurePhase = ''
       ./configure --prefix=/usr                   \
           --host=$LFS_TGT                         \
-          --build=$(sh ./support/config.guess)    \
-          --without-bash-malloc
+          --build=$(build-aux/config.guess)       \
+          --enable-install-program=hostname      \
+          --enable-no-install-program=kill,uptime
     '';
 
     installFlags = [ "DESTDIR=$(LFS)" ];
 
     postInstall = ''
-      mkdir $LFS/bin
-
-      pushd $LFS/usr
-      ln -sv ./bin/bash ../bin/sh
-      popd
-
+      echo "Install complete."
+      mv -v $LFS/usr/bin/chroot               $LFS/usr/sbin
+      mkdir -pv $LFS/usr/share/man/man8
+      mv -v $LFS/usr/share/man/man1/chroot.1  $LFS/usr/share/man/man8/chroot.8
+      sed -i 's/"1"/"8"/'                     $LFS/usr/share/man/man8/chroot.8
       rm -r $LFS/$sourceRoot
       cp -rvp $LFS/* $out/
     '';
@@ -72,4 +71,5 @@ let
     '';
   };
 in
-bashPkg
+coreutilsPkg
+
