@@ -1,4 +1,4 @@
-name: "cross_toolchain"
+name: "crosstemp_tool"
 on:
   pull_request:
   push:
