@@ -9,13 +9,10 @@ let
     python3
   ];
 
-
-
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
   glibcPkg = stdenvNoCC.mkDerivation {
     name = "glibc64-LucyOS";
-
 
     dontFixup = true;
 
@@ -29,9 +26,11 @@ let
       hash = "sha256-ZDVS2wMOLy1//eT1WOD1+D0/q/NKLg5W69tJdQrCew0=";
     };
 
-
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [ cc1 pkgs.gcc ];
+    buildInputs = [
+      cc1
+      pkgs.gcc
+    ];
 
     prePhases = "prepEnvironmentPhase";
     prepEnvironmentPhase = ''
@@ -100,4 +99,3 @@ let
   };
 in
 glibcPkg
-

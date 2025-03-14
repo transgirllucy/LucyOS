@@ -9,8 +9,6 @@ let
     python3
   ];
 
-
-
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
   glibcPkg = stdenvNoCC.mkDerivation {
@@ -28,15 +26,18 @@ let
       hash = "sha256-ZDVS2wMOLy1//eT1WOD1+D0/q/NKLg5W69tJdQrCew0";
     };
 
-
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [ cc1 pkgs.gcc ];
+    buildInputs = [
+      cc1
+      pkgs.gcc
+    ];
 
     prePhases = "prepEnvironmentPhase";
     prepEnvironmentPhase = ''
       export LFS=$PWD
       export LFSTOOLS=$LFS/tools
       export LFS_TGT=$(uname -m)-lfs-linux-gnu
+      export LFS_TGT32=i686-lfs-linux-gnu
       export PATH=$LFSTOOLS/bin:$PATH
       export PATH=$LFS/usr/bin:$PATH
       export CC1=${cc1}
@@ -98,4 +99,3 @@ let
   };
 in
 glibcPkg
-

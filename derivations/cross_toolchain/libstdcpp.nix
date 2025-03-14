@@ -10,7 +10,6 @@ let
     python3
   ];
 
-
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
   libstdCppCCPkg = stdenvNoCC.mkDerivation {
@@ -40,18 +39,18 @@ let
     '';
 
     configurePhase = ''
-       mkdir -v build
-       cd build
+         mkdir -v build
+         cd build
 
-     ../libstdc++-v3/configure           \
-    --host=$LFS_TGT                 \
-    --build=$(../config.guess)      \
-    --prefix=/usr                   \
-    --enable-multilib               \
-    --disable-nls                   \
-    --disable-libstdcxx-pch         \
-    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/14.2.0    
-'';
+       ../libstdc++-v3/configure           \
+      --host=$LFS_TGT                 \
+      --build=$(../config.guess)      \
+      --prefix=/usr                   \
+      --enable-multilib               \
+      --disable-nls                   \
+      --disable-libstdcxx-pch         \
+      --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/14.2.0    
+    '';
 
     installFlags = [ "DESTDIR=$(LFS)" ];
 
@@ -76,4 +75,3 @@ let
   };
 in
 libstdCppCCPkg
-

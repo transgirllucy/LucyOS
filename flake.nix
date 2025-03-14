@@ -22,25 +22,58 @@
         pkgs = pkgs;
         customBinutils = binuntilsStage;
       };
-      glibc64Stage = import ./derivations/cross_toolchain/glibc64.nix { pkgs = pkgs; cc1 = linuxHeadersStage; };
-      glibc32Stage = import ./derivations/cross_toolchain/glibc32.nix { pkgs = pkgs; cc1 = linuxHeadersStage; };
-          libstdcppStage = import ./derivations/cross_toolchain/libstdcpp.nix { pkgs = pkgs; cc1 = glibc64Stage; };
-    
-in
+      glibc64Stage = import ./derivations/cross_toolchain/glibc64.nix {
+        pkgs = pkgs;
+        cc1 = linuxHeadersStage;
+      };
+      glibc32Stage = import ./derivations/cross_toolchain/glibc32.nix {
+        pkgs = pkgs;
+        cc1 = linuxHeadersStage;
+      };
+      libstdcppStage = import ./derivations/cross_toolchain/libstdcpp.nix {
+        pkgs = pkgs;
+        cc1 = glibc64Stage;
+      };
+
+      m4Stage = import ./derivations/temp_tools/m4.nix {
+        pkgs = pkgs;
+        cc1 = libstdcppStage;
+      };
+      ncurses64Stage = import ./derivations/temp_tools/ncurses64.nix {
+        pkgs = pkgs;
+        cc1 = m4Stage;
+      };
+      ncurses32Stage = import ./derivations/temp_tools/ncurses32.nix {
+        pkgs = pkgs;
+        cc1 = m4Stage;
+      };
+      bashStage = import ./derivations/temp_tools/bash.nix {
+	pkgs = pkgs;
+        cc1 = ncurses64Stage;
+      };
+
+    in
     {
       packages.x86_64-linux = {
         crossToolchain = {
           libstdcpp = libstdcppStage;
-	  linuxHeaders = linuxHeadersStage;
+          linuxHeaders = linuxHeadersStage;
           gcc = gccStage1;
           binutils = binuntilsStage;
-	  glibc64 = glibc64Stage;
-	  glibc32 = glibc32Stage;
+          glibc64 = glibc64Stage;
+          glibc32 = glibc32Stage;
+        };
+        crossTempTools = {
+          m4 = m4Stage;
+          ncurses64 = ncurses64Stage;
+          ncurses32 = ncurses32Stage;
+          bash = bashStage;
         };
       };
       hydraJobs = {
- 	inherit (self)
-		packages;
+        inherit (self)
+          packages
+          ;
       };
     };
 }
