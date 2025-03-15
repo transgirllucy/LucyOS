@@ -48,14 +48,35 @@
         cc1 = m4Stage;
       };
       bashStage = import ./derivations/temp_tools/bash.nix {
-	pkgs = pkgs;
+        pkgs = pkgs;
         cc1 = ncurses64Stage;
       };
-     coreutilsStage = import ./derivations/temp_tools/coreutils.nix { pkgs = pkgs; cc1 = bashStage; };
+      coreutilsStage = import ./derivations/temp_tools/coreutils.nix {
+        pkgs = pkgs;
+        cc1 = bashStage;
+      };
 
-      diffutilsStage = import ./derivations/temp_tools/diffutils.nix { pkgs = pkgs; cc1 = coreutilsStage; };
-      fileStage = import ./derivations/temp_tools/file.nix { pkgs = pkgs; cc1 = diffutilsStage; };
-
+      diffutilsStage = import ./derivations/temp_tools/diffutils.nix {
+        pkgs = pkgs;
+        cc1 = coreutilsStage;
+      };
+      fileStage = import ./derivations/temp_tools/file.nix {
+        pkgs = pkgs;
+        cc1 = diffutilsStage;
+      };
+      findutilsStage = import ./derivations/temp_tools/findutils.nix {
+        pkgs = pkgs;
+        cc1 = fileStage;
+      };
+      gawkStage = import ./derivations/temp_tools/gawk.nix {
+        pkgs = pkgs;
+        cc1 = findutilsStage;
+      };
+      grepStage = import ./derivations/temp_tools/grep.nix { pkgs = pkgs; cc1 = gawkStage; };
+      gzipStage = import ./derivations/temp_tools/gzip.nix { pkgs = pkgs; cc1 = grepStage; };
+      makeStage = import ./derivations/temp_tools/make.nix { pkgs = pkgs; cc1 = gzipStage; };
+      patchStage = import ./derivations/temp_tools/patch.nix { pkgs = pkgs; cc1 = makeStage; };
+      sedStage = import ./derivations/temp_tools/sed.nix { pkgs = pkgs; cc1 = patchStage; };
 
     in
     {
@@ -73,9 +94,16 @@
           ncurses64 = ncurses64Stage;
           ncurses32 = ncurses32Stage;
           bash = bashStage;
-	  coreutils = coreutilsStage;
+          coreutils = coreutilsStage;
           diffutils = diffutilsStage;
           file = fileStage;
+          findutils = findutilsStage;
+          gawk = gawkStage;
+	  grep = grepStage;
+	  gzip = gzipStage;
+	  make = makeStage;
+	  patch = patchStage;
+	  sed = sedStage;
         };
       };
       hydraJobs = {

@@ -30,7 +30,17 @@ diffutils:
 	nix build .#crossTempTools.diffutils
 file:
 	nix build .#crossTempTools.file
-
-coretemp_tools: m4 ncurses64 ncurses32 bash coreutils diffutils file
-
+gawk:
+	nix build .#crossTempTools.gawk
+grep:
+	nix build .#crossTempTools.grep
+gzip:
+	nix build .#crossTempTools.gzip
+make:
+	nix build .#crossTempTools.make
+patch:
+	nix build .#crossTempTools.patch
+sed: 
+	nix build .#crossTempTools.sed
+coretemp_tools: m4 ncurses64 ncurses32 bash coreutils diffutils file gawk grep gzip make patch sed
 default: cross_toolchain coretemp_tools
