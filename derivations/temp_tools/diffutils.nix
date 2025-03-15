@@ -38,7 +38,6 @@ let
       chmod -R u+w $LFS
     '';
 
-
     configurePhase = ''
       ./configure --prefix=/usr                   \
           --host=$LFS_TGT                         \
@@ -67,4 +66,3 @@ let
   };
 in
 diffutilsPkg
-

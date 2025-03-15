@@ -1,4 +1,7 @@
-{ pkgs, cc1 }:
+{
+  pkgs,
+  cc1,
+}:
 let
   nixpkgs = pkgs;
   stdenvNoCC = nixpkgs.stdenvNoCC;
@@ -12,19 +15,16 @@ let
 
   # Attributes for stdenv.mkDerivation can be found at:
   # https://nixos.org/manual/nixpkgs/stable/#sec-tools-of-stdenv
-  filePkg = stdenvNoCC.mkDerivation {
-    name = "file-LucyOS";
+  findutilsPkg = stdenvNoCC.mkDerivation {
+    name = "findutils-LucyOS";
 
     src = pkgs.fetchurl {
-      url = "https://astron.com/pub/file/file-5.46.tar.gz";
-      hash = "sha256-ycx3x8VgxUMTXtxVWvYJ1WGdvvARmX6YjOQKPXXYYIg=";
+      url = "https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz";
+      hash = "sha256-E4fgtn/yR9Kr3pmPkN+/cMFJE5Glnd/suK5ph4nwpPU=";
     };
 
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [
-      cc1
-      pkgs.gcc
-    ];
+    buildInputs = [ cc1 ];
     dontFixup = true;
 
     prePhases = "prepEnvironmentPhase";
@@ -35,6 +35,7 @@ let
       export PATH=$PATH:$LFS/usr/bin
       export PATH=$PATH:$LFSTOOLS/bin
       export CONFIG_SITE=$LFS/usr/share/config.site
+      # export CC=$LFSTOOLS/bin/x86_64-lfs-linux-gnu-gcc
       export CC1=${cc1}
 
       cp -r $CC1/* $LFS
@@ -42,35 +43,15 @@ let
     '';
 
     configurePhase = ''
-      mkdir build
-      cd build
-          ../configure                \
-              --disable-bzlib         \
-              --disable-libseccomp    \
-              --disable-xzlib         \
-              --disable-zlib
-          make
-      cd ..
-
-      # export CC=$LFS_TGT-gcc
-      # export CXX=$LFS_TGT-g++
-
-      ./configure                     \
-          --prefix=/usr               \
-          --host=$LFS_TGT             \
-          --build=$(./config.guess)
-    '';
-
-    # buildFlags = [ "FILE_COMPILE=$LFS/$sourceRoot/build/src/file" ];
-
-    buildPhase = ''
-      make  FILE_COMPILE=$LFS/$sourceRoot/build/src/file
+      ./configure --prefix=/usr                   \
+          --localstatedir=/var/lib/locate         \
+          --host=$LFS_TGT                         \
+          --build=$(build-aux/config.guess)
     '';
 
     installFlags = [ "DESTDIR=$(LFS)" ];
 
     postInstall = ''
-      rm -v $LFS/usr/lib/libmagic.la
       rm -r $LFS/$sourceRoot
       cp -rvp $LFS/* $out/
     '';
@@ -89,4 +70,4 @@ let
     '';
   };
 in
-filePkg
+findutilsPkg

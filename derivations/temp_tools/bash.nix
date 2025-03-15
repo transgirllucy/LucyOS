@@ -21,7 +21,10 @@ let
     };
 
     nativeBuildInputs = [ nativePackages ];
-    buildInputs = [ cc1 pkgs.gcc ];
+    buildInputs = [
+      cc1
+      pkgs.gcc
+    ];
     dontFixup = true;
 
     prePhases = "prepEnvironmentPhase";
@@ -36,7 +39,6 @@ let
       cp -r $CC1/* $LFS
       chmod -R u+w $LFS
     '';
-
 
     configurePhase = ''
       ./configure --prefix=/usr                   \

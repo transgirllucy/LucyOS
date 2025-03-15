@@ -9,7 +9,6 @@ let
     bison
   ];
 
-
   coreutilsPkg = stdenvNoCC.mkDerivation {
     name = "coreutils-LucyOS";
 
@@ -35,7 +34,6 @@ let
       cp -r $CC1/* $LFS
       chmod -R u+w $LFS
     '';
-
 
     configurePhase = ''
       ./configure --prefix=/usr                   \
@@ -72,4 +70,3 @@ let
   };
 in
 coreutilsPkg
-
