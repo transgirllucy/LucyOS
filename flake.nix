@@ -758,11 +758,6 @@
         cc2 = ssMandbStage;
         lib = nixpkgs.lib;
       };
-      ssneofetch = import ./derivations/sys_software/ssneofetch.nix {
-        pkgs = x86_pkgs;
-        cc2 = ssBashStage;
-        lib = nixpkgs.lib;
-      };
       ssUtillinuxStage = import ./derivations/sys_software/ssutillinux.nix {
         pkgs = x86_pkgs;
         lfsSrcs = lfsSrcList;
@@ -790,6 +785,11 @@
         lfsHashes = lfsHashList;
         kconfig = kconfigFile;
         cc2 = sysConfStage;
+        lib = nixpkgs.lib;
+      };
+      neofetchStage = import ./derivations/software/neofetch.nix {
+        pkgs = x86_pkgs;
+        cc2 = linuxKernelStage;
         lib = nixpkgs.lib;
       };
     in {
@@ -915,16 +915,16 @@
         procps = ssProcpsStage;
         utillinux = ssUtillinuxStage;
         e2fsprogs = ssE2FsprogsStage;
-        neofetch = ssneofetch;
       };
 
       packages.x86_64-linux.sysconf = {
         default = linuxKernelStage;
         sysconf = sysConfStage;
         kernel = linuxKernelStage;
+        neofetch = neofetchStage;
       };
 
-      packages.x86_64-linux.default = linuxKernelStage;
+      packages.x86_64-linux.default = neofetchStage;
     };
 
 }

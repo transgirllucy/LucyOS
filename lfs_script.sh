@@ -6,7 +6,7 @@ LFS=/mnt/lfs
 
 # Function definitions
 build() {
-  echo "Build output location: $(nix build $PWD# --print-out-paths)"
+  echo "Build output location: $(nix build $PWD# --print-out-paths |& nom)"
 }
 
 copy_build_to_lfs() {

@@ -137,7 +137,7 @@ let
     cp -pvr /opt/* $OUT/opt
     cp -pvr /srv/* $OUT/srv
     cp -pvr /boot/* $OUT/boot
-    cp -pvr /home/* $OUT/home
+    
     cp -pvr /sbin/* $OUT/sbin
     cp -pvr /root/* $OUT/root
     cp -pvr /etc/* $OUT/etc
